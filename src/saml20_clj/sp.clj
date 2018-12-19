@@ -44,12 +44,12 @@
    (str
      (hiccup.page/xml-declaration "UTF-8")
      (hiccup/html
-       [:md:EntityDescriptor {:xmlns:md  "urn:oasis:names:tc:SAML:2.0:metadata",
-                              :ID  (clojure.string/replace acs-uri #"[:/]" "_") ,
+       [:md:EntityDescriptor {:xmlns:md  "urn:oasis:names:tc:SAML:2.0:metadata"
+                              :ID  (clojure.string/replace acs-uri #"[:/]" "_")
                               :entityID  app-name}
         [:md:SPSSODescriptor
-         (cond-> {:AuthnRequestsSigned "true",
-                  :WantAssertionsSigned "true",
+         (cond-> {:AuthnRequestsSigned "true"
+                  :WantAssertionsSigned "true"
                   :protocolSupportEnumeration "urn:oasis:names:tc:SAML:2.0:protocol"}
                  (not sign-request?) (dissoc :AuthnRequestsSigned))
          [:md:KeyDescriptor  {:use  "signing"}
@@ -60,12 +60,15 @@
           [:ds:KeyInfo  {:xmlns:ds  "http://www.w3.org/2000/09/xmldsig#"}
            [:ds:X509Data
             [:ds:X509Certificate certificate-str]]]]
-         [:md:NameIDFormat  "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"]
-         [:md:NameIDFormat  "urn:oasis:names:tc:SAML:2.0:nameid-format:transient"]
-         [:md:NameIDFormat  "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"]
-         [:md:NameIDFormat  "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"]
-         [:md:NameIDFormat  "urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName"]
-         [:md:AssertionConsumerService  {:Binding  "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST", :Location acs-uri, :index  "0", :isDefault  "true"}]]])))
+         [:md:NameIDFormat "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"]
+         [:md:NameIDFormat "urn:oasis:names:tc:SAML:2.0:nameid-format:transient"]
+         [:md:NameIDFormat "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"]
+         [:md:NameIDFormat "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"]
+         [:md:NameIDFormat "urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName"]
+         [:md:AssertionConsumerService {:Binding  "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                        :Location acs-uri
+                                        :index "0"
+                                        :isDefault "true"}]]])))
   ([app-name acs-uri certificate-str]
    (metadata app-name acs-uri certificate-str true)))
 
@@ -87,10 +90,7 @@
         :AssertionConsumerServiceURL acs-url}
        [:saml:Issuer
         {:xmlns:saml "urn:oasis:names:tc:SAML:2.0:assertion"}
-        saml-service-name]
-       ;;[:samlp:NameIDPolicy {:AllowCreate false :Format saml-format}]
-       
-       ])))
+        saml-service-name]])))
 
 (defn generate-mutables
   []
@@ -114,7 +114,7 @@
      (let [current-time (ctime/now)
            new-saml-id (next-saml-id-fn!)
            issue-instant (shared/make-issue-instant current-time)
-           new-request (create-request issue-instant 
+           new-request (create-request issue-instant
                                        saml-format
                                        saml-service-name
                                        new-saml-id
@@ -182,7 +182,6 @@
         parsed-zipper (clojure.zip/xml-zip xml)]
     (response->map parsed-zipper)))
 
-
 (defn make-saml-signer
   [keystore-filename keystore-password key-alias & {:keys [algorithm] :or {algorithm :sha1}}]
   (when keystore-filename
@@ -206,7 +205,7 @@
               transforms (doto (new Transforms xmldoc)
                            (.addTransform Transforms/TRANSFORM_ENVELOPED_SIGNATURE)
                            (.addTransform Transforms/TRANSFORM_C14N_EXCL_OMIT_COMMENTS))
-              sig (new org.apache.xml.security.signature.XMLSignature xmldoc nil sig-algo 
+              sig (new org.apache.xml.security.signature.XMLSignature xmldoc nil sig-algo
                        Canonicalizer/ALGO_ID_C14N_EXCL_OMIT_COMMENTS)
               canonicalizer (Canonicalizer/getInstance Canonicalizer/ALGO_ID_C14N_EXCL_OMIT_COMMENTS)]
           (.. xmldoc
@@ -223,7 +222,7 @@
   (when keystore-filename
     (let [ks (shared/load-key-store keystore-filename keystore-password)
           private-key (.getKey ks key-alias (.toCharArray keystore-password))
-          decryption-cred (doto (new org.opensaml.xml.security.x509.BasicX509Credential) 
+          decryption-cred (doto (new org.opensaml.xml.security.x509.BasicX509Credential)
                             (.setPrivateKey private-key))
           decrypter (new org.opensaml.saml2.encryption.Decrypter
                          nil
@@ -287,7 +286,7 @@
   (let [status (.. saml-resp getStatus getStatusCode getValue)]
     {:inResponseTo (.getInResponseTo saml-resp)
      :status status
-     :success? (= status org.opensaml.saml2.core.StatusCode/SUCCESS_URI) 
+     :success? (= status org.opensaml.saml2.core.StatusCode/SUCCESS_URI)
      :version (.. saml-resp getVersion toString)
      :issueInstant (to-timestamp (.getIssueInstant saml-resp))
      :destination (.getDestination saml-resp)}))
