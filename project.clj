@@ -6,7 +6,7 @@
   :source-paths ["src"]
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [clj-time "0.15.1"]
-                 [ring "1.4.0"]
+                 [ring "1.7.1"]
                  [org.apache.santuario/xmlsec "2.1.2"]
                  [compojure "1.6.1"]
                  [org.opensaml/opensaml "2.6.4"]
