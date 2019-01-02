@@ -60,6 +60,8 @@
           [:ds:KeyInfo  {:xmlns:ds  "http://www.w3.org/2000/09/xmldsig#"}
            [:ds:X509Data
             [:ds:X509Certificate certificate-str]]]]
+         [:md:SingleLogoutService  {:Binding  "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" 
+                                    :Location  "https://example.org/saml/SingleLogout"}]
          [:md:NameIDFormat "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"]
          [:md:NameIDFormat "urn:oasis:names:tc:SAML:2.0:nameid-format:transient"]
          [:md:NameIDFormat "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"]
