@@ -1,17 +1,17 @@
 # saml20-clj
 
-This is a SAML 2.0 clojure library for SSO. 
+This is a SAML 2.0 clojure library for SSO.
 This library allows a clojure application to act as a service provider (SP).
 Tested with Microsoft Active Directory Federation Server (ADFS) as the identity provider (IdP).
 
 ## Installation
 
-Add ```[kirasystems/saml20-clj "0.1.10"]``` to your project dependencies.
+Add ```[stas_ghost/saml20-clj "0.1.13"]``` to your project dependencies.
 
 ## Usage
 
-* See [quephird/saml-test](https://github.com/quephird/saml-test) for the usage. 
-* This repository is forked from [vlacs/saml20-clj](https://github.com/vlacs/saml20-clj) and added the support for XML signing with SHA-256 instead of SHA-1, which is required by ADFS by default. 
+* See [quephird/saml-test](https://github.com/quephird/saml-test) for the usage.
+* This repository is forked from [vlacs/saml20-clj](https://github.com/vlacs/saml20-clj) and added the support for XML signing with SHA-256 instead of SHA-1, which is required by ADFS by default.
 
 ``` clojure
 (ns myapp.routes.saml
@@ -28,9 +28,9 @@ Add ```[kirasystems/saml20-clj "0.1.10"]``` to your project dependencies.
   {:app-name (format "%s/saml/metadata" base-url)
    :base-uri base-url
    :idp-uri "https://adfs.example.com/adfs/ls/"
-   ;; Copy /EntityDescriptor/RoleDescriptor/KeyDescriptor[@use="signing"]/KeyInfo/X509Data/X509Certificate of 
+   ;; Copy /EntityDescriptor/RoleDescriptor/KeyDescriptor[@use="signing"]/KeyInfo/X509Data/X509Certificate of
    ;; https://adfs.example.com/federationMetadata/2007-06/federationMetadata.xml
-   :idp-cert "ABCDEF..." 
+   :idp-cert "ABCDEF..."
    :keystore-file "saml.jks"
    :keystore-password saml-keystore-password
    :key-alias "saml"})

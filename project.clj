@@ -1,6 +1,6 @@
-(defproject kirasystems/saml20-clj "0.1.13"
+(defproject stas_ghost/saml20-clj "0.1.13"
   :description "Basic SAML 2.0 library for SSO."
-  :url "https://github.com/k2n/saml20-clj"
+  :url "https://github.com/Stas-Ghost/saml20-clj"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :source-paths ["src"]
